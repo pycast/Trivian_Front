@@ -55,11 +55,11 @@ function AllQuiz() {
   const handleQuizSubmit = (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const formQuizData = new FormData(e.target);
 
     setNewQuiz({
-      categories: formData.get("categories"),
-      label: formData.get("label"),
+      categories: formQuizData.get("categories"),
+      label: formQuizData.get("quizlabel"),
       user: { id: 1 },
     });
   };
@@ -71,7 +71,7 @@ function AllQuiz() {
   useEffect(() => {
     if (newCat.label !== "") {
       dbCat
-        .post(undefined, newQuiz)
+        .post(undefined, newCat)
         .then((data)=>setCategories((prevCat) => [...prevCat, data]))
         .catch((error) => alert(error.message))
         .finally(() => console.log("Post terminé"));
@@ -81,10 +81,10 @@ function AllQuiz() {
   const handleCatSubmit = (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const formCatData = new FormData(e.target);
 
     setNewCat({
-      label: formData.get("label"),
+      label: formCatData.get("catlabel"),
     });
   };
 
@@ -123,7 +123,7 @@ function AllQuiz() {
           ))}
         </div>
         <br />
-        <input type='text' placeholder='Nom du quiz' name='label' />
+        <input type='text' placeholder='Nom du quiz' name='quizlabel' />
         <br />
         <button type='submit' className='btn btn-primary mt-5'>
           Créer le quiz
@@ -135,7 +135,7 @@ function AllQuiz() {
       <h1>Nouvelle catégorie:</h1>
       <form onSubmit={handleCatSubmit}>
         <br />
-        <input type='text' placeholder='Nouvelle catégorie' name='label' />
+        <input type='text' placeholder='Nouvelle catégorie' name='catlabel' />
         <br />
         <button type='submit' className='btn btn-primary mt-5'>
           Ajouter la catégorie
