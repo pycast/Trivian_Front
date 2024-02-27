@@ -15,9 +15,7 @@ function Nav() {
                 <summary>Les Quiz</summary>
                 <ul className='p-2 bg-base-100 rounded-t-none'>
                   <li>
-                    <a href="/newquiz">Nouveau Quiz!</a>
-                    <a href="/allquiz">Tous les Quiz!</a>
-
+                    <a href="/quiz/all">Tous les Quiz!</a>
                   </li>
                 </ul>
               </details>
