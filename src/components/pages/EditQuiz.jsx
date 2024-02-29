@@ -4,11 +4,17 @@ import { Link, useParams } from "react-router-dom";
 
 function EditQuiz() {
   let { id } = useParams();
-
   const dbQuiz = new ApiService(`http://localhost:8080/quiz/${id}`);
   const dbQuestions = new ApiService(`http://localhost:8080/questions`);
-
   const [quiz, setQuiz] = useState();
+
+  const [formData, setFormData] = useState({
+    questionLabel: "",
+    answer1: "",
+    answer2: "",
+    answer3: "",
+    answer4: "",
+  });
 
   function fetchQuiz() {
     dbQuiz
@@ -89,6 +95,13 @@ function EditQuiz() {
           },
         ],
       });
+      setFormData({
+        questionLabel: "",
+        answer1: "",
+        answer2: "",
+        answer3: "",
+        answer4: "",
+      });
     } else {
       alert("Au moins une réponse doit-être vraie.");
     }
@@ -104,6 +117,15 @@ function EditQuiz() {
         fetchQuiz();
       })
       .catch((error) => console.log(error.message));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   if (!quiz) {
@@ -162,30 +184,60 @@ function EditQuiz() {
       <form onSubmit={handleQuestionSubmit} className="m-5" id="questionForm">
         <label>Question:</label>
         <br />
-        <input type="text" name="questionLabel" placeholder="La question" />
+        <input
+          type="text"
+          name="questionLabel"
+          value={formData.questionLabel}
+          onChange={handleChange}
+          placeholder="La question"
+        />
         <br />
         <div className="mt-3">
           <label>Réponses:</label>
           <br />
-          <input type="text" name="answer1" placeholder="Réponse A" />
+          <input
+            type="text"
+            name="answer1"
+            value={formData.answer1}
+            onChange={handleChange}
+            placeholder="Réponse A"
+          />
           <p className="text-sm">
             C'est une bonne réponse <input type="checkbox" id="checkAnswer1" />
           </p>
 
           <br />
-          <input type="text" name="answer2" placeholder="Réponse B" />
+          <input
+            type="text"
+            name="answer2"
+            value={formData.answer2}
+            onChange={handleChange}
+            placeholder="Réponse B"
+          />
           <p className="text-sm">
             C'est une bonne réponse <input type="checkbox" id="checkAnswer2" />
           </p>
 
           <br />
-          <input type="text" name="answer3" placeholder="Réponse C" />
+          <input
+            type="text"
+            name="answer3"
+            value={formData.answer3}
+            onChange={handleChange}
+            placeholder="Réponse C"
+          />
           <p className="text-sm">
             C'est une bonne réponse <input type="checkbox" id="checkAnswer3" />
           </p>
 
           <br />
-          <input type="text" name="answer4" placeholder="Réponse D" />
+          <input
+            type="text"
+            name="answer4"
+            value={formData.answer4}
+            onChange={handleChange}
+            placeholder="Réponse D"
+          />
           <p className="text-sm">
             C'est une bonne réponse <input type="checkbox" id="checkAnswer4" />
           </p>

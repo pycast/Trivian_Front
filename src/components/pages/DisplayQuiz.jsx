@@ -1,17 +1,32 @@
 import { useState, useEffect } from "react";
 import ApiService from "../service/ApiService";
 import { Link, useParams } from "react-router-dom";
+import { log } from "console";
 
 function DisplayQuiz() {
   let { id } = useParams();
   const dbQuiz = new ApiService(`http://localhost:8080/quiz/${id}`);
   const [quiz, setQuiz] = useState();
+  const [answers, setAnswers] = useState();
+  const dbAnswers = new ApiService(`http://localhost:8080/answers`);
 
   useEffect(() => {
     dbQuiz
       .get()
       .then((response) => {
         setQuiz(response);
+      })
+      .catch((error) => {
+        alert(error.message);
+      })
+      .finally(() => console.log("Get terminé"));
+  }, []);
+
+  useEffect(() => {
+    dbAnswers
+      .get()
+      .then((response) => {
+        setAnswers(response);
       })
       .catch((error) => {
         alert(error.message);
@@ -28,8 +43,6 @@ function DisplayQuiz() {
     }
     console.log(formDataObject);
   };
-
-  console.log(quiz);
 
   if (!quiz) {
     return (
