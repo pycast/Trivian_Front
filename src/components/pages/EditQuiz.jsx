@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ApiService from "../service/ApiService";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function EditQuiz() {
   let { id } = useParams();
@@ -94,8 +94,6 @@ function EditQuiz() {
     }
   };
 
-  console.log("nouvelle question:");
-  console.log(newQuestion);
   console.log(quiz);
 
   const deleteQuestion = (id) => {
@@ -112,30 +110,36 @@ function EditQuiz() {
     return (
       <>
         <h1>Quiz introuvable!</h1>
+        <Link to="/quiz/all">
+          <button className="btn btn-primary">
+            Retour à la liste des quiz
+          </button>
+        </Link>
       </>
     );
   }
 
   return (
     <>
-      <a href='/quiz/all'>
-        <button className='btn btn-primary'>Retour à la liste des quiz</button>
-      </a>
+      <Link to="/quiz/all">
+        <button className="btn btn-primary">Retour à la liste des quiz</button>
+      </Link>
 
       <h1>{quiz.label}</h1>
-      <p className='text-sm'>
+      <p className="text-sm">
         Catégorie.s :{" "}
         {quiz.categories.map((cat) => (
           <span key={cat.id}>{cat.label}</span>
         ))}
       </p>
-      <p className='text-sm'>par : {quiz.user.username}</p>
+      <p className="text-sm">par : {quiz.user.username}</p>
       <h1>Les questions :</h1>
-      <div className='m-3'>
+      <div className="m-3">
         {quiz.questions.map((q) => (
           <div key={q.id}>
-            <h2 className='underline'>{q.label} :</h2>
+            <h2 className="underline">{q.label} :</h2>
             <button
+              className="btn btn-warning"
               onClick={() => {
                 deleteQuestion(q.id);
               }}
@@ -144,7 +148,7 @@ function EditQuiz() {
             </button>
             <ul>
               {q.answers.map((a) => (
-                <div className='m-1' key={a.id}>
+                <div className="m-1" key={a.id}>
                   <li className={a.correct ? "text-green-400" : "text-red-400"}>
                     {a.label}
                   </li>
@@ -155,40 +159,40 @@ function EditQuiz() {
         ))}
       </div>
 
-      <form onSubmit={handleQuestionSubmit} className='m-5' id='questionForm'>
+      <form onSubmit={handleQuestionSubmit} className="m-5" id="questionForm">
         <label>Question:</label>
         <br />
-        <input type='text' name='questionLabel' placeholder='La question' />
+        <input type="text" name="questionLabel" placeholder="La question" />
         <br />
-        <div className='mt-3'>
+        <div className="mt-3">
           <label>Réponses:</label>
           <br />
-          <input type='text' name='answer1' placeholder='Réponse A' />
-          <p className='text-sm'>
-            C'est une bonne réponse <input type='checkbox' id='checkAnswer1' />
+          <input type="text" name="answer1" placeholder="Réponse A" />
+          <p className="text-sm">
+            C'est une bonne réponse <input type="checkbox" id="checkAnswer1" />
           </p>
 
           <br />
-          <input type='text' name='answer2' placeholder='Réponse B' />
-          <p className='text-sm'>
-            C'est une bonne réponse <input type='checkbox' id='checkAnswer2' />
+          <input type="text" name="answer2" placeholder="Réponse B" />
+          <p className="text-sm">
+            C'est une bonne réponse <input type="checkbox" id="checkAnswer2" />
           </p>
 
           <br />
-          <input type='text' name='answer3' placeholder='Réponse C' />
-          <p className='text-sm'>
-            C'est une bonne réponse <input type='checkbox' id='checkAnswer3' />
+          <input type="text" name="answer3" placeholder="Réponse C" />
+          <p className="text-sm">
+            C'est une bonne réponse <input type="checkbox" id="checkAnswer3" />
           </p>
 
           <br />
-          <input type='text' name='answer4' placeholder='Réponse D' />
-          <p className='text-sm'>
-            C'est une bonne réponse <input type='checkbox' id='checkAnswer4' />
+          <input type="text" name="answer4" placeholder="Réponse D" />
+          <p className="text-sm">
+            C'est une bonne réponse <input type="checkbox" id="checkAnswer4" />
           </p>
 
           <br />
         </div>
-        <button type='submit' className='btn btn-accent'>
+        <button type="submit" className="btn btn-accent">
           Ajouter la question
         </button>
       </form>
