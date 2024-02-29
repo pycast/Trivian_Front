@@ -3,9 +3,9 @@ import ApiService from "../service/ApiService";
 import { useParams } from "react-router-dom";
 
 function DisplayQuiz() {
-  let { quizId } = useParams();
+  let { id } = useParams();
 
-  const dbQuiz = new ApiService(`http://localhost:8080/quiz/${quizId}`);
+  const dbQuiz = new ApiService(`http://localhost:8080/quiz/${id}`);
 
   const [quiz, setQuiz] = useState();
 
@@ -29,35 +29,50 @@ function DisplayQuiz() {
     return (
       <>
         <h1>Quiz introuvable!</h1>
+        <a href="/quiz/all"><button className="btn btn-primary">Retour à la liste des quiz</button></a>
       </>
     );
   }
 
+  else if (quiz.questions = []){
+      return (
+        <>
+          <h1>Ce quiz n'a pas encore de questions!</h1>
+          <a href="/quiz/all"><button className="btn btn-primary">Retour à la liste des quiz</button></a>
+        </>
+      )
+  }
+
   return (
     <>
+      <a href="/quiz/all"><button className="btn btn-primary">Retour à la liste des quiz</button></a>
+      
       <h1>{quiz.label}</h1>
       <p className='text-sm'>
         Catégorie.s :{" "}
         {quiz.categories.map((cat) => (
-          <span key={cat.id}>{cat.label}</span>
+          <span key={cat.id}>{cat.label} </span>
         ))}
       </p>
       <p className='text-sm'>par : {quiz.user.username}</p>
-      <h1>Les questions :</h1>
-      <div className="m-3">
-        {quiz.questions.map((q) => (
-          <div key={q.id}>
-            <h2 className="underline">{q.label} :</h2>
-            {q.answers.map((a) => (
-              <div className="m-1" key={a.id}>
-                <p>{a.label}</p>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
 
-      <p>Ajouter une question :</p>
+      <form className='mt-5'>
+        {quiz.questions.map((q) => (
+          <div key={q.id} className="mt-3">
+            <h2 className='font-bold'>{q.label} :</h2>
+            <div className="columns-2">
+              {q.answers.map((a)=>(
+                <div key={a.id}>
+                  <input type="checkbox" name={a.id} id={`check${a.id}`} />{a.label}
+                </div>
+              )
+              )}
+            </div>
+          </div>
+          
+        ))}
+        <input type="submit" value="envoyer" className="btn btn-accent"/>
+      </form>
     </>
   );
 }
