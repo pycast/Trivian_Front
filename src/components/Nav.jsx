@@ -8,17 +8,11 @@ function Nav() {
         <div className='flex-none'>
           <ul className='menu menu-horizontal px-1'>
             <li>
-              <a href="/login">Compte</a>
+              <a href='/login'>Compte</a>
             </li>
+
             <li>
-              <details>
-                <summary>Les Quiz</summary>
-                <ul className='p-2 bg-base-100 rounded-t-none'>
-                  <li>
-                    <a href="/quiz/all">Tous les Quiz!</a>
-                  </li>
-                </ul>
-              </details>
+              <a href='/quiz/all'>Les Quiz!</a>
             </li>
           </ul>
         </div>

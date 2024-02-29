@@ -57,6 +57,7 @@ function EditQuiz() {
     );
 
     const formQuestionData = new FormData(e.target);
+
     if (Array.from(checkboxes).some((checkbox) => checkbox.checked)) {
       setNewQuestion({
         label: formQuestionData.get("questionLabel"),
@@ -88,7 +89,9 @@ function EditQuiz() {
           },
         ],
       });
-    } else {alert("Au moins une réponse doit-être vraie.")}
+    } else {
+      alert("Au moins une réponse doit-être vraie.");
+    }
   };
 
   console.log("nouvelle question:");
@@ -115,6 +118,10 @@ function EditQuiz() {
 
   return (
     <>
+      <a href='/quiz/all'>
+        <button className='btn btn-primary'>Retour à la liste des quiz</button>
+      </a>
+
       <h1>{quiz.label}</h1>
       <p className='text-sm'>
         Catégorie.s :{" "}
