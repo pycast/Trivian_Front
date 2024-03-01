@@ -7,12 +7,13 @@ import { httpClient } from "../service/http.client";
 function AllQuiz() {
   let userSessionData = undefined;
 
-  const storedUserSessionData = sessionStorage.getItem('LOGIN_RESP');
+  const storedUserSessionData = sessionStorage.getItem("LOGIN_RESP");
 
   if (storedUserSessionData) {
     userSessionData = JSON.parse(storedUserSessionData);
   } else {
-  console.log('aucun user connecté');    }
+    console.log("aucun user connecté");
+  }
 
   const [quizModalOpen, setQuizIsOpen] = React.useState(false);
   function openQuizModal() {
@@ -51,7 +52,7 @@ function AllQuiz() {
 
   useEffect(() => {
     httpClient.api
-      .get('category')
+      .get("category")
       .then((response) => {
         setCategories(response.content);
       })
@@ -61,45 +62,45 @@ function AllQuiz() {
       .finally(() => console.log("Get terminé"));
   }, []);
 
-  const [newQuiz, setNewQuiz] = useState({
-    categories: {},
-    label: "",
-    user: {id:1},
-  });
+  // const [newQuiz, setNewQuiz] = useState({
+  //   categories: [],
+  //   label: "",
+  //   user: { },
+  // });
 
   const handleQuizSubmit = (e) => {
     e.preventDefault();
+
     const formQuizData = new FormData(e.target);
     const formCategories = [];
+
     const checkboxes = document.querySelectorAll(
       "#quizForm input[type=checkbox]:checked"
     );
+
     checkboxes.forEach(function (checkbox) {
       formCategories.push({ id: +checkbox.name });
     });
-    setNewQuiz({
-      categories: formCategories,
-      label: formQuizData.get("label"),
-      user: { id: userSessionData?.user.id || 0 },
-    });
-    console.log(Object.fromEntries(new FormData(e.target).entries()));
+
     httpClient.api
-    .post("quiz", newQuiz)
-    .then(() => fetchData())
-    .catch((error) => alert(error.message))
-    .finally(() => console.log("Post terminé"));
+      .post("quiz", {
+        categories: formCategories,
+        label: formQuizData.get("label"),
+        user: { id: userSessionData?.user.id || 0 },
+      })
+      .then(() => fetchData())
+      .catch((error) => alert(error.message))
+      .finally(() => console.log("Post terminé"));
     closeQuizModal();
   };
-
-  console.log(newQuiz);
 
   const handleCatSubmit = (e) => {
     e.preventDefault();
     httpClient.api
-        .post("category", Object.fromEntries(new FormData(e.target).entries()))
-        .then(() => fetchData())
-        .catch((error) => alert(error.message))
-        .finally(() => console.log("Post terminé"));
+      .post("category", Object.fromEntries(new FormData(e.target).entries()))
+      .then(() => fetchData())
+      .catch((error) => alert(error.message))
+      .finally(() => console.log("Post terminé"));
     closeCatModal();
   };
 
@@ -117,13 +118,15 @@ function AllQuiz() {
   return (
     <>
       <h1>Liste de tous les quiz :</h1>
-      <div className="p-5">
-        <table className="table table-zebra">
+      <div className='p-5'>
+        <table className='table table-zebra'>
           <thead>
-            <th>Label</th>
-            <th>Catégorie.s</th>
-            <th>Auteur</th>
-            <th>Edit</th>
+            <tr>
+              <th>Label</th>
+              <th>Catégorie.s</th>
+              <th>Auteur</th>
+              <th>Edit</th>
+            </tr>
           </thead>
           <tbody>
             {quiz.map((q) => (
@@ -139,10 +142,10 @@ function AllQuiz() {
                 <td>{q.user ? q.user.username : "N/A"}</td>
                 <td>
                   <Link to={`/quiz/edit/${q.id}`}>
-                    <button className="btn btn-warning">Modifier</button>
+                    <button className='btn btn-warning'>Modifier</button>
                   </Link>
                   <button
-                    className="btn btn-error"
+                    className='btn btn-error'
                     onClick={() => {
                       deleteQuiz(q.id);
                     }}
@@ -155,47 +158,47 @@ function AllQuiz() {
           </tbody>
         </table>
       </div>
-      <button onClick={openQuizModal} className="btn btn-primary">
+      <button onClick={openQuizModal} className='btn btn-primary'>
         Ajouter un quiz
       </button>
 
       <ReactModal
         isOpen={quizModalOpen}
         onRequestClose={closeQuizModal}
-        contentLabel="Add Quiz"
+        contentLabel='Add Quiz'
         ariaHideApp={false}
       >
         <div>
           <h1>Nouveau quiz:</h1>
-          <form onSubmit={handleQuizSubmit} id="quizForm">
+          <form onSubmit={handleQuizSubmit} id='quizForm'>
             <div>
-              <legend className="font-bold">Catégorie.s:</legend>
-              <div className="columns-3">
+              <legend className='font-bold'>Catégorie.s:</legend>
+              <div className='columns-3'>
                 {categories.map((c) => (
                   <div key={c.id}>
-                    <input type="checkbox" name={c.id} key={c.id} />
+                    <input type='checkbox' name={c.id} key={c.id} />
                     <label>{c.label}</label>
                   </div>
                 ))}
               </div>
             </div>
             <br />
-            <input type="text" placeholder="Nom du quiz" name="label" />
+            <input type='text' placeholder='Nom du quiz' name='label' />
             <br />
-            <button type="submit" className="btn btn-accent mt-5">
+            <button type='submit' className='btn btn-accent mt-5'>
               Créer le quiz
             </button>
           </form>
         </div>
       </ReactModal>
-      <button onClick={openCatModal} className="btn btn-accent">
+      <button onClick={openCatModal} className='btn btn-accent'>
         Ajouter une catégorie
       </button>
 
       <ReactModal
         isOpen={CatModalOpen}
         onRequestClose={closeCatModal}
-        contentLabel="Add Category"
+        contentLabel='Add Category'
         ariaHideApp={false}
       >
         <div>
@@ -203,13 +206,13 @@ function AllQuiz() {
           <form onSubmit={handleCatSubmit}>
             <br />
             <input
-              type="text"
-              placeholder="Nouvelle catégorie"
-              name="label"
-              id="categorylabel"
+              type='text'
+              placeholder='Nouvelle catégorie'
+              name='label'
+              id='categorylabel'
             />
             <br />
-            <button type="submit" className="btn btn-accent mt-5">
+            <button type='submit' className='btn btn-accent mt-5'>
               Ajouter la catégorie
             </button>
           </form>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import ApiService from "../service/ApiService";
 import { Link, useParams } from "react-router-dom";
 import { httpClient } from "../service/http.client";
 
@@ -20,42 +19,57 @@ function DisplayQuiz() {
       .finally(() => console.log("Get terminé"));
   }, []);
 
-console.log("réponse traitée:");
-console.log(answers);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     httpClient.api
       .get(`questions/quiz/${id}`)
       .then((response) => {
-        setAnswers(response.map((question)=>{
-          return {
-            id:question.id,
-            correct:question.answers.filter(response=>response.correct)
-          }
-
-          }));
+        setAnswers(
+          response.map((q) => {
+            return {
+              id: q.id,
+              correct: q.answers.filter((response) => response.correct),
+            };
+          })
+        );
       })
       .catch((error) => {
         alert(error.message);
       })
-      .finally(() => console.log("Get terminé"));
+      .finally(() => {
+        console.log("Réponses du quiz ");
+        console.log(answers);
+      });
 
     let formData = new FormData(e.target);
-    let formDataObject = {};
+    let arrayFormData = [];
+
     for (let [key, value] of formData.entries()) {
-      formDataObject[key] = value;
+      arrayFormData.push({ key, value });
     }
-    console.log(formDataObject);
+
+    console.log("Réponses du formulaire ");
+    console.log(arrayFormData);
+
+    answers.map((a)=>{
+      console.log(a);
+    });
+
+    arrayFormData.map((data)=>{
+      console.log(data);
+    })
+
+  
+
   };
 
   if (!quiz) {
     return (
       <>
         <h1>Quiz introuvable!</h1>
-        <Link to="/quiz/all">
-          <button className="btn btn-primary">
+        <Link to='/quiz/all'>
+          <button className='btn btn-primary'>
             Retour à la liste des quiz
           </button>
         </Link>
@@ -65,13 +79,13 @@ console.log(answers);
     return (
       <>
         <h1>Ce quiz n'a pas encore de questions!</h1>
-        <Link to="/quiz/all">
-          <button className="btn btn-primary">
+        <Link to='/quiz/all'>
+          <button className='btn btn-primary'>
             Retour à la liste des quiz
           </button>
         </Link>
         <Link to={`/quiz/edit/${id}`}>
-          <button className="btn btn-warning">Ajouter des questions</button>
+          <button className='btn btn-warning'>Ajouter des questions</button>
         </Link>
       </>
     );
@@ -79,34 +93,34 @@ console.log(answers);
 
   return (
     <>
-      <Link to="/quiz/all">
-        <button className="btn btn-primary">Retour à la liste des quiz</button>
+      <Link to='/quiz/all'>
+        <button className='btn btn-primary'>Retour à la liste des quiz</button>
       </Link>
 
       <h1>{quiz.label}</h1>
-      <p className="text-sm">
+      <p className='text-sm'>
         Catégorie.s :{" "}
         {quiz.categories.map((cat) => (
           <span key={cat.id}>{cat.label} </span>
         ))}
       </p>
-      <p className="text-sm">par : {quiz.user.username}</p>
+      <p className='text-sm'>par : {quiz.user.username}</p>
 
-      <form className="mt-5" onSubmit={handleSubmit}>
+      <form className='mt-5' onSubmit={handleSubmit}>
         {quiz.questions.map((q) => (
-          <div key={q.id} className="mt-3">
-            <h2 className="font-bold">{q.label} :</h2>
-            <div className="columns-2">
+          <div key={q.id} className='mt-3'>
+            <h2 className='font-bold'>{q.label} :</h2>
+            <div className='columns-2'>
               {q.answers.map((a) => (
                 <div key={a.id}>
-                  <input type="checkbox" name={a.id} id={`check${a.id}`} />
+                  <input type='checkbox' name={a.id} id={`check${a.id}`} />
                   <label htmlFor={`check${a.id}`}>{a.label}</label>
                 </div>
               ))}
             </div>
           </div>
         ))}
-        <input type="submit" value="envoyer" className="btn btn-accent" />
+        <input type='submit' value='envoyer' className='btn btn-accent' />
       </form>
     </>
   );

@@ -1,3 +1,32 @@
-h1{
-    font-size: larger;
+.marge{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 150px;
+    margin-left: 70px;
 }
+
+
+html{
+    background-image: url("/Background-website-01.jpg");
+    background-size: 100%;
+}
+
+#titre{
+    margin-left: 50px;
+}
+
+#trivian{
+    clear: right;
+    margin-left: 30px;
+    font-size: 65px;
+    font-family: impact;
+}
+
+#logo{
+    float: left;
+}
+
+table, th, td {
+    border: 1px solid;
+}
+
