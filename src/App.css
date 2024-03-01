@@ -7,7 +7,7 @@
 
 
 html{
-    background-image: url("src/assets/Background-website-01.jpg");
+    background-image: url("/Background-website-01.jpg");
     background-size: 100%;
 }
 
@@ -25,3 +25,8 @@ html{
 #logo{
     float: left;
 }
+
+table, th, td {
+    border: 1px solid;
+}
+

@@ -130,14 +130,16 @@ function AllQuiz() {
   console.log(quiz);
   return (
     <>
-      <h1>Liste de tous les quiz :</h1>
+      <h1 className="p-5">Liste de tous les quiz :</h1>
       <div className="p-5">
         <table className="table table-zebra">
           <thead>
-            <th>Label</th>
-            <th>Catégorie.s</th>
-            <th>Auteur</th>
-            <th>Edit</th>
+            <tr>
+              <th>Label</th>
+              <th>Catégorie.s</th>
+              <th>Auteur</th>
+              <th>Edit</th>
+            </tr>
           </thead>
           <tbody>
             {quiz.map((q) => (
@@ -169,9 +171,15 @@ function AllQuiz() {
           </tbody>
         </table>
       </div>
-      <button onClick={openQuizModal} className="btn btn-primary">
-        Ajouter un quiz
+      <div className="p-3">
+        <button onClick={openQuizModal} className="btn btn-primary">
+          Ajouter un quiz
+        </button>
+        <button onClick={openCatModal} className="btn btn-accent">
+        Ajouter une catégorie
       </button>
+      </div>
+      
 
       <ReactModal
         isOpen={quizModalOpen}
@@ -202,9 +210,7 @@ function AllQuiz() {
           </form>
         </div>
       </ReactModal>
-      <button onClick={openCatModal} className="btn btn-accent">
-        Ajouter une catégorie
-      </button>
+      
 
       <ReactModal
         isOpen={CatModalOpen}

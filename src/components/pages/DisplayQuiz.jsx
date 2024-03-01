@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import ApiService from "../service/ApiService";
 import { Link, useParams } from "react-router-dom";
-import { log } from "console";
 
 function DisplayQuiz() {
   let { id } = useParams();
