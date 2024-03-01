@@ -5,15 +5,14 @@ import { Link } from "react-router-dom";
 import { httpClient } from "../service/http.client";
 
 function AllQuiz() {
-  const [userSessionData, setUserSessionData] = useState(null);
+  let userSessionData = undefined;
 
-  useEffect(() => {
-    const storedUserSessionData = sessionStorage.getItem('LOGIN_RESP');
-    if (storedUserSessionData) {
-      setUserSessionData(JSON.parse(storedUserSessionData));
-    } else {
-console.log('aucun user connecté');    }
-  }, []);
+  const storedUserSessionData = sessionStorage.getItem('LOGIN_RESP');
+
+  if (storedUserSessionData) {
+    userSessionData = JSON.parse(storedUserSessionData);
+  } else {
+  console.log('aucun user connecté');    }
 
   const [quizModalOpen, setQuizIsOpen] = React.useState(false);
   function openQuizModal() {
@@ -62,9 +61,6 @@ console.log('aucun user connecté');    }
       .finally(() => console.log("Get terminé"));
   }, []);
 
-
-  console.log(userSessionData);
-
   const [newQuiz, setNewQuiz] = useState({
     categories: {},
     label: "",
@@ -79,12 +75,12 @@ console.log('aucun user connecté');    }
       "#quizForm input[type=checkbox]:checked"
     );
     checkboxes.forEach(function (checkbox) {
-      formCategories.push({ id: checkbox.name });
+      formCategories.push({ id: +checkbox.name });
     });
     setNewQuiz({
       categories: formCategories,
       label: formQuizData.get("label"),
-      user: { id: 1 },
+      user: { id: userSessionData?.user.id || 0 },
     });
     console.log(Object.fromEntries(new FormData(e.target).entries()));
     httpClient.api
