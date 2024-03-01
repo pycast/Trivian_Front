@@ -33,6 +33,7 @@ function AllQuiz() {
 
   const [quiz, setQuiz] = useState([]);
   const [categories, setCategories] = useState([]);
+  
 
   function fetchData() {
     httpClient.api
@@ -103,6 +104,9 @@ function AllQuiz() {
       .finally(() => console.log("Post terminé"));
     closeCatModal();
   };
+  console.log(quiz);
+  console.log(categories);
+
 
   const deleteQuiz = (id) => {
     httpClient.api
@@ -117,9 +121,9 @@ function AllQuiz() {
   console.log(quiz);
   return (
     <>
-      <h1>Liste de tous les quiz :</h1>
-      <div className='p-5'>
-        <table className='table table-zebra'>
+      <h1 className="p-5">Liste de tous les quiz :</h1>
+      <div className="p-5">
+        <table className="table table-zebra">
           <thead>
             <tr>
               <th>Label</th>
@@ -158,9 +162,15 @@ function AllQuiz() {
           </tbody>
         </table>
       </div>
-      <button onClick={openQuizModal} className='btn btn-primary'>
-        Ajouter un quiz
+      <div className="p-3">
+        <button onClick={openQuizModal} className="btn btn-primary">
+          Ajouter un quiz
+        </button>
+        <button onClick={openCatModal} className="btn btn-accent">
+        Ajouter une catégorie
       </button>
+      </div>
+      
 
       <ReactModal
         isOpen={quizModalOpen}
@@ -191,7 +201,7 @@ function AllQuiz() {
           </form>
         </div>
       </ReactModal>
-      <button onClick={openCatModal} className='btn btn-accent'>
+      <button onClick={openCatModal} className="btn btn-accent">
         Ajouter une catégorie
       </button>
 
