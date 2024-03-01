@@ -1,10 +1,20 @@
 import { useState, useEffect } from "react";
-import ApiService from "../service/ApiService";
 import React from "react";
 import ReactModal from "react-modal";
 import { Link } from "react-router-dom";
+import { httpClient } from "../service/http.client";
 
 function AllQuiz() {
+  const [userSessionData, setUserSessionData] = useState(null);
+
+  useEffect(() => {
+    const storedUserSessionData = sessionStorage.getItem('LOGIN_RESP');
+    if (storedUserSessionData) {
+      setUserSessionData(JSON.parse(storedUserSessionData));
+    } else {
+console.log('aucun user connecté');    }
+  }, []);
+
   const [quizModalOpen, setQuizIsOpen] = React.useState(false);
   function openQuizModal() {
     setQuizIsOpen(true);
@@ -21,14 +31,12 @@ function AllQuiz() {
     setCatIsOpen(false);
   }
 
-  const dbQuiz = new ApiService("http://localhost:8080/quiz");
   const [quiz, setQuiz] = useState([]);
-  const dbCat = new ApiService("http://localhost:8080/category");
   const [categories, setCategories] = useState([]);
 
   function fetchData() {
-    dbQuiz
-      .get()
+    httpClient.api
+      .get("quiz")
       .then((response) => {
         setQuiz(response.content);
       })
@@ -43,8 +51,8 @@ function AllQuiz() {
   }, []);
 
   useEffect(() => {
-    dbCat
-      .get()
+    httpClient.api
+      .get('category')
       .then((response) => {
         setCategories(response.content);
       })
@@ -54,21 +62,14 @@ function AllQuiz() {
       .finally(() => console.log("Get terminé"));
   }, []);
 
+
+  console.log(userSessionData);
+
   const [newQuiz, setNewQuiz] = useState({
     categories: {},
     label: "",
-    user: { id: 1 },
+    user: {id:1},
   });
-
-  useEffect(() => {
-    if (newQuiz.label !== "") {
-      dbQuiz
-        .post(undefined, newQuiz)
-        .then(() => fetchData())
-        .catch((error) => alert(error.message))
-        .finally(() => console.log("Post terminé"));
-    }
-  }, [newQuiz]);
 
   const handleQuizSubmit = (e) => {
     e.preventDefault();
@@ -82,40 +83,33 @@ function AllQuiz() {
     });
     setNewQuiz({
       categories: formCategories,
-      label: formQuizData.get("quizlabel"),
+      label: formQuizData.get("label"),
       user: { id: 1 },
     });
+    console.log(Object.fromEntries(new FormData(e.target).entries()));
+    httpClient.api
+    .post("quiz", newQuiz)
+    .then(() => fetchData())
+    .catch((error) => alert(error.message))
+    .finally(() => console.log("Post terminé"));
     closeQuizModal();
   };
 
   console.log(newQuiz);
 
-  const [newCat, setNewCat] = useState({
-    label: "",
-  });
-
-  useEffect(() => {
-    if (newCat.label !== "") {
-      dbCat
-        .post(undefined, newCat)
+  const handleCatSubmit = (e) => {
+    e.preventDefault();
+    httpClient.api
+        .post("category", Object.fromEntries(new FormData(e.target).entries()))
         .then(() => fetchData())
         .catch((error) => alert(error.message))
         .finally(() => console.log("Post terminé"));
-    }
-  }, [newCat]);
-
-  const handleCatSubmit = (e) => {
-    e.preventDefault();
-    const formCatData = new FormData(e.target);
-    setNewCat({
-      label: formCatData.get("catlabel"),
-    });
     closeCatModal();
   };
 
   const deleteQuiz = (id) => {
-    dbQuiz
-      .delete("/" + id)
+    httpClient.api
+      .delete(`quiz/${id}`)
       .then(() => {
         console.log(`Quiz ${id} supprimé`);
         fetchData();
@@ -190,7 +184,7 @@ function AllQuiz() {
               </div>
             </div>
             <br />
-            <input type="text" placeholder="Nom du quiz" name="quizlabel" />
+            <input type="text" placeholder="Nom du quiz" name="label" />
             <br />
             <button type="submit" className="btn btn-accent mt-5">
               Créer le quiz
@@ -215,7 +209,8 @@ function AllQuiz() {
             <input
               type="text"
               placeholder="Nouvelle catégorie"
-              name="catlabel"
+              name="label"
+              id="categorylabel"
             />
             <br />
             <button type="submit" className="btn btn-accent mt-5">
