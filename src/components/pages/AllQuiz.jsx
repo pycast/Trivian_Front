@@ -25,6 +25,7 @@ function AllQuiz() {
   const [quiz, setQuiz] = useState([]);
   const dbCat = new ApiService("http://localhost:8080/category");
   const [categories, setCategories] = useState([]);
+  
 
   function fetchData() {
     dbQuiz
@@ -112,6 +113,9 @@ function AllQuiz() {
     });
     closeCatModal();
   };
+  console.log(quiz);
+  console.log(categories);
+
 
   const deleteQuiz = (id) => {
     dbQuiz
