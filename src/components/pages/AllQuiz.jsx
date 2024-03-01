@@ -201,9 +201,6 @@ function AllQuiz() {
           </form>
         </div>
       </ReactModal>
-      <button onClick={openCatModal} className="btn btn-accent">
-        Ajouter une catégorie
-      </button>
 
       <ReactModal
         isOpen={CatModalOpen}
