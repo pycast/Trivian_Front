@@ -1,5 +1,5 @@
 function Home() {
-  return (
+    return (
     <>
       <div className="marge">
         <h1 className='text-3xl font-bold p-3'>Trivian! C'est quoi?</h1>

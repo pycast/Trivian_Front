@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import ApiService from "../service/ApiService";
 import { Link, useParams } from "react-router-dom";
+import { httpClient } from "../service/http.client";
 
 function EditQuiz() {
   let { id } = useParams();
-  const dbQuiz = new ApiService(`http://localhost:8080/quiz/${id}`);
-  const dbQuestions = new ApiService(`http://localhost:8080/questions`);
   const [quiz, setQuiz] = useState();
 
   const [formData, setFormData] = useState({
@@ -17,10 +15,10 @@ function EditQuiz() {
   });
 
   function fetchQuiz() {
-    dbQuiz
-      .get()
+    httpClient.api
+      .get(`quiz/${id}`)
       .then((quiz) => {
-        dbQuestions.get(`/quiz/${quiz.id}`).then((questions) => {
+        httpClient.api.get(`questions/quiz/${quiz.id}`).then((questions) => {
           quiz.questions = questions;
           setQuiz(quiz);
         });
@@ -47,8 +45,8 @@ function EditQuiz() {
 
   useEffect(() => {
     if (newQuestion.label !== "") {
-      dbQuestions
-        .post(undefined, newQuestion)
+      httpClient.api
+        .post("questions", newQuestion)
         .then(() => fetchQuiz())
         .catch((error) => alert(error.message))
         .finally(() => console.log("Post terminé"));
@@ -110,8 +108,8 @@ function EditQuiz() {
   console.log(quiz);
 
   const deleteQuestion = (id) => {
-    dbQuestions
-      .delete("/" + id)
+    httpClient.api
+      .delete(`questions/${id}`)
       .then(() => {
         console.log(`Question ${id} supprimée`);
         fetchQuiz();

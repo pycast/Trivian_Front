@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react";
 import ApiService from "../service/ApiService";
 import { Link, useParams } from "react-router-dom";
+import { httpClient } from "../service/http.client";
 
 function DisplayQuiz() {
   let { id } = useParams();
-  const dbQuiz = new ApiService(`http://localhost:8080/quiz/${id}`);
   const [quiz, setQuiz] = useState();
   const [answers, setAnswers] = useState();
-  const dbAnswers = new ApiService(`http://localhost:8080/answers`);
 
   useEffect(() => {
-    dbQuiz
-      .get()
+    httpClient.api
+      .get(`quiz/${id}`)
       .then((response) => {
         setQuiz(response);
       })
@@ -21,20 +20,28 @@ function DisplayQuiz() {
       .finally(() => console.log("Get terminé"));
   }, []);
 
-  useEffect(() => {
-    dbAnswers
-      .get()
+console.log("réponse traitée:");
+console.log(answers);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    httpClient.api
+      .get(`questions/quiz/${id}`)
       .then((response) => {
-        setAnswers(response);
+        setAnswers(response.map((question)=>{
+          return {
+            id:question.id,
+            correct:question.answers.filter(response=>response.correct)
+          }
+
+          }));
       })
       .catch((error) => {
         alert(error.message);
       })
       .finally(() => console.log("Get terminé"));
-  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
     let formData = new FormData(e.target);
     let formDataObject = {};
     for (let [key, value] of formData.entries()) {
@@ -93,7 +100,7 @@ function DisplayQuiz() {
               {q.answers.map((a) => (
                 <div key={a.id}>
                   <input type="checkbox" name={a.id} id={`check${a.id}`} />
-                  {a.label}
+                  <label htmlFor={`check${a.id}`}>{a.label}</label>
                 </div>
               ))}
             </div>
